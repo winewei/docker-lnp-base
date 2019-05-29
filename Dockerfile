@@ -214,7 +214,6 @@ RUN set -eux; \
 COPY docker-php-ext-* docker-php-entrypoint /usr/local/bin/
 
 RUN docker-php-ext-enable sodium mongodb redis swoole igbinary 
-ENTRYPOINT ["docker-php-entrypoint"]
 
 RUN set -ex \
 	&& cd /usr/local/etc \
@@ -250,10 +249,6 @@ RUN set -ex \
 		echo 'listen = 9000'; \
 	} | tee php-fpm.d/zz-docker.conf
 
-
-LABEL resty_deb_flavor="${RESTY_DEB_FLAVOR}"
-LABEL resty_deb_version="${RESTY_DEB_VERSION}"
-
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -288,11 +283,12 @@ RUN apt update \
     && python3 get-pip.py \
     && pip install awscli \
     && rm -rf ./get-pip.py \
-    && apt remove -y python3 \
+    && DEBIAN_FRONTEND=noninteractive apt-get remove -y --purge python3 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY base/. /base
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
