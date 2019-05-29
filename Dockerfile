@@ -202,13 +202,14 @@ RUN set -eux; \
 		make install; \
 		rm -rf swoole*; \
     \
+	curl -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-8.phar -L; \
+	chmod +x /usr/local/bin/phpunit; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /tmp/pear ~/.pearrc
 
 COPY docker-php-ext-* docker-php-entrypoint /usr/local/bin/
 
-RUN docker-php-ext-enable sodium mongodb redis swoole igbinary
-
+RUN docker-php-ext-enable sodium mongodb redis swoole igbinary 
 ENTRYPOINT ["docker-php-entrypoint"]
 
 RUN set -ex \
