@@ -12,9 +12,6 @@ script:
     - echo "skipping tests"
 
 before_deploy: |-
-    # get or generate project name 
-    export PROJECT_NAME=${TRAVIS_REPO_SLUG#*/}
-
     # Generate image tags
     tag_build="${TRAVIS_TAG}"
     export LATEST="pristtlt/lnp-base:latest"
