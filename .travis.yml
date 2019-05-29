@@ -1,0 +1,39 @@
+if: branch =~ ^master and tags =~ * 
+language: bash
+group: stable
+dist: trusty
+os: linux
+services:
+- docker
+install:
+    - echo "skipping tests"
+
+script:
+    - echo "skipping tests"
+
+before_deploy: |-
+    # get or generate project name 
+    export PROJECT_NAME=${TRAVIS_REPO_SLUG#*/}
+
+    # Generate image tags
+    tag_build="${TRAVIS_TAG}"
+    export LATEST="pristtlt/lnp-base:latest"
+    export build_tag="pristtlt/lnp-base:${tag_build}"
+
+    # Build docker image
+    docker build \
+    -t ${LATEST} \
+    -t ${build_tag} \
+    .
+
+deploy:
+- provider: script
+  script:  >-
+    docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD}
+    && docker push ${LATEST}
+    && docker push ${build_tag}
+  skip_cleanup: true
+  on: 
+    branch:
+      - master
+    tags: true
