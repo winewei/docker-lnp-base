@@ -204,6 +204,10 @@ RUN set -eux; \
     \
 	curl -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-8.phar -L; \
 	chmod +x /usr/local/bin/phpunit; \
+	\
+	curl -o composer-setup.php https://getcomposer.org/installer -L; \
+	php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer; \
+	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /tmp/pear ~/.pearrc
 
