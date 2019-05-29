@@ -190,7 +190,7 @@ RUN set -eux; \
 	php --version; \
 	\
 	pecl update-channels; \
-    pecl install mongodb; \
+    pecl install mongodb igbinary redis; \
 	\
     curl -o swoole-4.3.4.tar.gz https://github.com/swoole/swoole-src/archive/v4.3.4.tar.gz -L; \
 	tar xf swoole-4.3.4.tar.gz; \
@@ -201,14 +201,13 @@ RUN set -eux; \
 		make; \
 		make install; \
 		rm -rf swoole*; \
-	docker-php-ext-enable swoole mongodb; \
     \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /tmp/pear ~/.pearrc
 
 COPY docker-php-ext-* docker-php-entrypoint /usr/local/bin/
 
-RUN docker-php-ext-enable sodium
+RUN docker-php-ext-enable sodium mongodb redis swoole igbinary
 
 ENTRYPOINT ["docker-php-entrypoint"]
 
