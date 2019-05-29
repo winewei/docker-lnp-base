@@ -1,4 +1,4 @@
-if: branch =~ ^master and tags =~ * 
+if: branch =~ ^master
 language: bash
 group: stable
 dist: trusty
