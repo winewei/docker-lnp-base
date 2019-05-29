@@ -13,7 +13,7 @@ script:
 
 before_deploy: |-
     # Generate image tags
-    tag_build="${TRAVIS_TAG}"
+    tag_build="7.2-fpm"
     export LATEST="pristtlt/lnp-base:latest"
     export build_tag="pristtlt/lnp-base:${tag_build}"
 
