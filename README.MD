@@ -59,5 +59,5 @@ zlib
 [Zend Modules]
 ```
 ## thanks
-copy from https://github.com/shansongxian/docker
-token-init.sh copy from  https://github.com/Kaggggggga/docker-php
+- source code copy from: `https://github.com/shansongxian/docker`
+- token-init.sh copy from:  `https://github.com/Kaggggggga/docker-php`
