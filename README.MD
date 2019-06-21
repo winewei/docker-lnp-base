@@ -1,8 +1,11 @@
-## php7.2 base image
-include php 7.2 openresty 1.13.2
-
-
-php modules:
+# php7.2 base image
+```
+- Include php 7.2 openresty 1.13.2
+- Include phpunit
+- Install composer
+- install pecl
+```
+## php modules:
 ```
 [PHP Modules]
 bcmath
