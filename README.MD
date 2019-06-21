@@ -1,4 +1,5 @@
 # php7.2 base image
+`base debian:stretch-slim`
 ```
 - Include php-fpm 7.2
 - Include openresty 1.13.2
