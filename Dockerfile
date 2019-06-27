@@ -246,13 +246,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
 ENV PATH="$PATH:/usr/local/openresty${RESTY_DEB_FLAVOR}/luajit/bin:/usr/local/openresty${RESTY_DEB_FLAVOR}/nginx/sbin:/usr/local/openresty${RESTY_DEB_FLAVOR}/bin"
 ENV PARAMS ""
 RUN apt update \
-    && apt install -y python3 unzip git\
-    && curl -O https://bootstrap.pypa.io/get-pip.py \
-    && python3 get-pip.py \
-    && pip install awscli \
-    && rm -rf ./get-pip.py \
-    && DEBIAN_FRONTEND=noninteractive apt-get remove -y --purge python3 \
-    && rm -rf /var/lib/apt/lists/*
+    && apt install -y unzip git\
 
 COPY ./conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 COPY ./conf/default.conf /usr/local/openresty/nginx/conf/vhosts/default.conf
