@@ -3,7 +3,6 @@ FROM debian:stretch-slim
 ARG RESTY_DEB_FLAVOR=""
 ARG RESTY_DEB_VERSION="=1.13.6.2-1~stretch1"
 
-# default will build php version: 7.2.18
 ARG PHP_VERSION
 
 ENV PHP_URL="https://www.php.net/get/php-${PHP_VERSION}.tar.xz/from/this/mirror"
@@ -89,6 +88,7 @@ RUN set -eux; \
                 argon2 \
                 libargon2-0 \
                 libargon2-0-dev \
+				libzip-dev \
 		${PHP_EXTRA_BUILD_DEPS:-} \
 	; \
 	sed -e 's/stretch/buster/g' /etc/apt/sources.list > /etc/apt/sources.list.d/buster.list; \
