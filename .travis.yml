@@ -1,4 +1,3 @@
-if: branch =~ ^master
 language: bash
 group: stable
 dist: trusty
@@ -13,13 +12,10 @@ script:
 
 before_deploy: |-
     # Generate image tags
-    tag_build="7.2-fpm"
-    export LATEST="pristtlt/lnp-base:latest"
-    export build_tag="pristtlt/lnp-base:${tag_build}"
+    export build_tag="pristtlt/lnp-base:${TRAVIS_TAG}"
 
     # Build docker image
     docker build \
-    -t ${LATEST} \
     -t ${build_tag} \
     .
 
@@ -27,9 +23,7 @@ deploy:
 - provider: script
   script:  >-
     docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD}
-    && docker push ${LATEST}
     && docker push ${build_tag}
   skip_cleanup: true
-  on: 
-    branch:
-      - master
+  on:
+    all_branches: true

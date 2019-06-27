@@ -253,6 +253,7 @@ RUN apt update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+COPY ./conf/default.conf /usr/local/openresty/nginx/conf/vhosts/default.conf
 COPY ./conf/php-fpm.conf /usr/local/etc/php-fpm.conf
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY base/. /base
