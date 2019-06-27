@@ -2,8 +2,11 @@ FROM debian:stretch-slim
 
 ARG RESTY_DEB_FLAVOR=""
 ARG RESTY_DEB_VERSION="=1.13.6.2-1~stretch1"
+ARG PHP_VERSION=""
 
-ENV PHP_VERSION 7.2.17
+# default will build php version: 7.2.18
+ENV PHP_VERSION 7.2.18
+
 ENV PHP_URL="https://www.php.net/get/php-${PHP_VERSION}.tar.xz/from/this/mirror"
 ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=www --with-fpm-group=www --disable-cgi
 ENV PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2"

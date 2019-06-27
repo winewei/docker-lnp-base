@@ -12,10 +12,11 @@ script:
 
 before_deploy: |-
     # Generate image tags
-    export build_tag="pristtlt/lnp-base:${TRAVIS_TAG}"
+    export build_tag="${DOCKER_REPO}:${TRAVIS_TAG}-fpm"
 
     # Build docker image
     docker build \
+    --build-arg PHP_VERSION=${TRAVIS_TAG} \
     -t ${build_tag} \
     .
 
