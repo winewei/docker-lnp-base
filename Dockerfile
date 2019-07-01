@@ -1,12 +1,8 @@
-FROM debian:stretch-slim
-
-ARG RESTY_DEB_FLAVOR=""
-ARG RESTY_DEB_VERSION="=1.13.6.2-1~stretch1"
+FROM debian:stretch-slim AS build
 
 ARG PHP_VERSION
 
 ENV PHP_URL="https://www.php.net/get/php-${PHP_VERSION}.tar.xz/from/this/mirror"
-ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=www --with-fpm-group=www --disable-cgi
 ENV PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2"
 ENV PHP_CPPFLAGS="$PHP_CFLAGS"
 ENV PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie"
@@ -41,8 +37,7 @@ RUN set -eux; \
 	mkdir -p "$PHP_INI_DIR/conf.d"; \
 	[ ! -d /var/web/www ]; \
 	mkdir -p /var/web/www; \
-	chown www:www /var/web/www; \
-	chmod 777 /var/web/www
+	chown www:www /var/web/www;
 
 RUN set -xe; \
 	\
@@ -161,9 +156,12 @@ RUN set -eux; \
                 --with-gettext \
                 --with-gd \
                 --enable-opcache \
+                --enable-fpm \
+                --with-fpm-user=www \
+                --with-fpm-group=www \
+                --disable-cgi \
 		$(test "$gnuArch" = 's390x-linux-gnu' && echo '--without-pcre-jit') \
 		--with-libdir="lib/$debMultiarch" \
-		${PHP_EXTRA_CONFIGURE_ARGS:-} \
 	; \
 	make -j "$(nproc)"; \
 	find -type f -name '*.a' -delete; \
@@ -201,21 +199,29 @@ RUN set -eux; \
     	./configure --enable-coroutine --enable-openssl  --enable-http2  --enable-async-redis --enable-sockets --enable-mysqlnd --with-openssl-dir=/usr/include/openssl; \
 		make clean; \
 		make; \
-		make install; \
-		rm -rf swoole*; \
+		make install
+RUN set -eux;\
+    if [ ${PHP_VERSION%.*} =  7.0 ]; then \
+        PHPUNIT_VERSION=6; \
+    elif [ ${PHP_VERSION%.*} = 7.1 ]; then \
+        PHPUNIT_VERSION=7; \
+    elif [ ${PHP_VERSION%.*} =  7.2 ]; then \
+        PHPUNIT_VERSION=8; \
+    else \
+        PHPUNIT_VERSION=8; \
+    fi; \
     \
-	curl -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-8.phar -L; \
-	chmod +x /usr/local/bin/phpunit; \
-	\
-	curl -o composer-setup.php https://getcomposer.org/installer -L; \
-	php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer; \
-	\
-	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	rm -rf /tmp/pear ~/.pearrc
+    curl -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar -L; \
+    chmod +x /usr/local/bin/phpunit; \
+    curl -o composer-setup.php https://getcomposer.org/installer -L; \
+    php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer
 
 COPY docker-php-ext-* docker-php-entrypoint /usr/local/bin/
 
-RUN docker-php-ext-enable sodium mongodb redis swoole igbinary 
+RUN docker-php-ext-enable mongodb redis swoole igbinary
+
+
+COPY ./conf/php-fpm.conf /usr/local/etc/php-fpm.conf
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -236,26 +242,64 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
         wget \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        openresty${RESTY_DEB_FLAVOR}${RESTY_DEB_VERSION} \
+        openresty \
     && DEBIAN_FRONTEND=noninteractive apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
-    && mkdir /usr/local/openresty${RESTY_DEB_FLAVOR}/nginx/conf/vhosts -p \
-    && ln -sf /dev/stdout /usr/local/openresty${RESTY_DEB_FLAVOR}/nginx/logs/access.log \
-    && ln -sf /dev/stderr /usr/local/openresty${RESTY_DEB_FLAVOR}/nginx/logs/error.log
+    && mkdir /usr/local/openresty/nginx/conf/vhosts -p \
+    && ln -sf /dev/stdout /usr/local/openresty/nginx/logs/access.log \
+    && ln -sf /dev/stderr /usr/local/openresty/nginx/logs/error.log
 
-ENV PATH="$PATH:/usr/local/openresty${RESTY_DEB_FLAVOR}/luajit/bin:/usr/local/openresty${RESTY_DEB_FLAVOR}/nginx/sbin:/usr/local/openresty${RESTY_DEB_FLAVOR}/bin"
-ENV PARAMS ""
-RUN apt update \
-    && apt install -y unzip git
+
+############################
+# Finnal build
+
+FROM debian:stretch-slim
+
+# Copy from build step
+COPY --from=build /usr/local/sbin /usr/local/sbin
+COPY --from=build /usr/local/bin /usr/local/bin
+COPY --from=build /usr/local/etc /usr/local/etc
+COPY --from=build /usr/local/lib /usr/local/lib
+COPY --from=build /usr/local/openresty /usr/local/openresty
 
 COPY ./conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 COPY ./conf/default.conf /usr/local/openresty/nginx/conf/vhosts/default.conf
-COPY ./conf/php-fpm.conf /usr/local/etc/php-fpm.conf
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY base/. /base
 
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+                libcurl4-openssl-dev \
+                libedit-dev \
+                libsodium-dev \
+                libsqlite3-dev \
+                libssl-dev \
+                libxml2-dev \
+                zlib1g-dev \
+                libmcrypt-dev \
+                libxml2-dev \
+                libjpeg-dev \
+                libpng-dev \
+                argon2 \
+                libargon2-0 \
+                libargon2-0-dev \
+                libzip-dev \
+                ca-certificates \
+                curl \
+                unzip \
+                git \
+   && rm -rf /usr/include/* \
+   && ln -s /usr/lib/x86_64-linux-gnu/libargon2.so /usr/lib/x86_64-linux-gnu/libargon2.so.1 \
+   && rm -rf /var/lib/apt/lists/* \
+   && useradd -M www -s /usr/sbin/nologin \
+   && mkdir -p /var/web/www \
+   && chown www:www /var/web/www \
+   && chmod +x /usr/local/bin/docker-entrypoint.sh \
+   && ln -sf /dev/stdout /usr/local/openresty/nginx/logs/access.log \
+   && ln -sf /dev/stderr /usr/local/openresty${RESTY_DEB_FLAVOR}/nginx/logs/error.log
+   
+ENV PATH="$PATH:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin"
+ENV PARAMS ""
 WORKDIR /var/web/www
 
 ENTRYPOINT ["docker-entrypoint.sh"]
