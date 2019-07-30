@@ -300,6 +300,7 @@ RUN apt-get update \
    
 ENV PATH="$PATH:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin"
 ENV PARAMS ""
+ENV ENABLE_LARAVEL_CONFIG_CACHE ""
 WORKDIR /var/web/www
 
 ENTRYPOINT ["docker-entrypoint.sh"]
