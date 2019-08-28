@@ -263,7 +263,6 @@ COPY --from=build /usr/local/openresty /usr/local/openresty
 
 COPY ./conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 COPY ./conf/default.conf /usr/local/openresty/nginx/conf/vhosts/default.conf
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY base/. /base
 
 RUN apt-get update \
@@ -293,7 +292,6 @@ RUN apt-get update \
    && useradd -M www -s /usr/sbin/nologin \
 #    && mkdir -p /var/web/www \
 #    && chown www:www /var/web/www \
-   && chmod +x /usr/local/bin/docker-php-entrypoint \
    && ln -sf /dev/stdout /usr/local/openresty/nginx/logs/access.log \
    && ln -sf /dev/stderr /usr/local/openresty/nginx/logs/error.log
    
