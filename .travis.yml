@@ -8,8 +8,9 @@ env:
   - VERSION=7.2.19 VARIANT=fpm
   - VERSION=7.2 VARIANT=fpm
   - VERSION=7.1.31 VARIANT=fpm
-  - VERSION=7.1.30 VARIANT=fpm
   - VERSION=7.1 VARIANT=fpm
+  - VERSION=7.0.33 VARIANT=fpm
+  - VERSION=7.0 VARIANT=fpm
 
 install:
   - echo "skip"
