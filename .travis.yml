@@ -1,30 +1,36 @@
 language: bash
-group: stable
-dist: trusty
-os: linux
-services:
-- docker
+services: docker
+
+env:
+  - VERSION=7.3.8 VARIANT=fpm
+  - VERSION=7.3 VARIANT=fpm
+  - VERSION=7.2.21 VARIANT=fpm
+  - VERSION=7.2.19 VARIANT=fpm
+  - VERSION=7.2 VARIANT=fpm
+  - VERSION=7.1.31 VARIANT=fpm
+  - VERSION=7.1.30 VARIANT=fpm
+  - VERSION=7.1 VARIANT=fpm
+
 install:
-    - echo "skipping tests"
+  - echo "skip"
+
+before_script:
+  - env | sort
+  - cd "${VERSION}/${VARIANT}"
+  - slash='/'; image="${DOCKER_REPO}:${VERSION}-${VARIANT//$slash/-}"
 
 script:
-    - echo "skipping tests"
-
-before_deploy: |-
-    # Generate image tags
-    export build_tag="${DOCKER_REPO}:${TRAVIS_TAG}-fpm"
-
-    # Build docker image
-    docker build \
-    --build-arg PHP_VERSION=${TRAVIS_TAG} \
-    -t ${build_tag} \
-    .
+  - |
+    (
+      set -Eeuo pipefail
+      set -x
+      docker build -t "$image" .
+    )
+after_script:
+  - docker images
 
 deploy:
 - provider: script
-  script:  >-
-    docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD}
-    && docker push ${build_tag}
-  skip_cleanup: true
-  on:
-    tags: true
+  script: >- 
+   docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD}
+   && docker push $image
