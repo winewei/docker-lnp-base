@@ -1,10 +1,11 @@
-# php7.2 base image
+# php base image
 `base debian:stretch-slim`
 ```
-- Include php-fpm 7.2
+- Include php-fpm 7.*
 - Include phpunit
 - Include composer
 - Include pecl
+- Include openresty
 ```
 ## php modules:
 ```
@@ -46,7 +47,6 @@ shmop
 SimpleXML
 soap
 sockets
-sodium
 SPL
 sqlite3
 standard
@@ -57,10 +57,12 @@ xml
 xmlreader
 xmlrpc
 xmlwriter
+Zend OPcache
 zip
 zlib
 
 [Zend Modules]
+Zend OPcache
 ```
 ## thanks
 - source code copy from: <https://github.com/shansongxian/docker>

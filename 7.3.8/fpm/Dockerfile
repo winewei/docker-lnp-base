@@ -299,7 +299,7 @@ RUN apt-get update \
    
 ENV PATH="$PATH:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin"
 ENV PARAMS ""
-WORKDIR /srv
+WORKDIR /var/web/www
 
 ENTRYPOINT ["docker-php-entrypoint"]
 

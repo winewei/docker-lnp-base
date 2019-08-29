@@ -293,14 +293,14 @@ RUN apt-get update \
    && ln -s /usr/lib/x86_64-linux-gnu/libargon2.so /usr/lib/x86_64-linux-gnu/libargon2.so.1 \
    && rm -rf /var/lib/apt/lists/* \
    && useradd -M www -s /usr/sbin/nologin \
-#    && mkdir -p /var/web/www \
+   && mkdir -p /var/web/www \
 #    && chown www:www /var/web/www \
    && ln -sf /dev/stdout /usr/local/openresty/nginx/logs/access.log \
    && ln -sf /dev/stderr /usr/local/openresty/nginx/logs/error.log
    
 ENV PATH="$PATH:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin"
 ENV PARAMS ""
-WORKDIR /srv
+WORKDIR /var/web/www
 
 ENTRYPOINT ["docker-php-entrypoint"]
 
