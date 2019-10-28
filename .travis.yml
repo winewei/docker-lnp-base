@@ -2,30 +2,21 @@ language: bash
 services: docker
 
 env:
-  - VERSION=7.3.8 VARIANT=fpm
-  - VERSION=7.3 VARIANT=fpm
-  - VERSION=7.2.21 VARIANT=fpm
-  - VERSION=7.2.19 VARIANT=fpm
-  - VERSION=7.2 VARIANT=fpm
-  - VERSION=7.1.31 VARIANT=fpm
-  - VERSION=7.1 VARIANT=fpm
-  - VERSION=7.0.33 VARIANT=fpm
-  - VERSION=7.0 VARIANT=fpm
+  - TAG=7.2.19-fpm-stretch PHPUNIT_VERSION=8
 
 install:
   - echo "skip"
 
 before_script:
   - env | sort
-  - cd "${VERSION}/${VARIANT}"
-  - slash='/'; image="${DOCKER_REPO}:${VERSION}-${VARIANT//$slash/-}"
+  - image="${DOCKER_REPO}:${TAG}"
 
 script:
   - |
     (
       set -Eeuo pipefail
       set -x
-      docker build -t "$image" .
+      docker build -t "$image" --build-arg IMAGE_TAG=${TAG} --build-arg PHPUNIT_VERSION=${PHPUNIT_VERSION} .
     )
 after_script:
   - docker images
