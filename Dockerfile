@@ -61,6 +61,7 @@ RUN apt-get update \
                               gettext \
                               zip \
                               exif \
+                              opcache \
     && yes Y | pecl install swoole \
                             mongodb \
                             igbinary \
