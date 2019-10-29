@@ -84,7 +84,6 @@ RUN curl -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-${PHPUNIT_VER
 # conf
 COPY conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 COPY conf/default.conf /usr/local/openresty/nginx/conf/vhosts/default.conf
-COPY conf/php-fpm.conf /usr/local/etc/php-fpm.conf
 COPY conf/conf-temp/. /conf-temp
 
 COPY scripts/. /scripts
@@ -99,4 +98,9 @@ ENV PARAMS="" \
     GITHUB_TOKEN="" \
     NPM_TOKEN="" \
     PHP_UPLOAD_MAX_FILESIZE="5M" \
-    PHP_POST_MAX_SIZE="8M"
+    PHP_POST_MAX_SIZE="8M" \
+    PHP_MAX_EXECUTION_TIME="600" \
+    PHP_MAX_INPUT_TIME="600" \
+    PHP_MEMORY_LIMIT="128M" \
+	PHP_REQUEST_TERMINATE_TIMEOUT="65" \
+    PHP_REQUEST_SLOWLOG_TIMEOUT="2"
