@@ -1,7 +1,8 @@
 server {
     listen       80 default_server;
     
-    root   /var/web/www/public;
+    root   ${NGINX_ROOT};
+	client_max_body_size	${NGINX_CLIENT_MAX_BODY_SIZE};
     index  index.html index.htm index.php;
 
     location / {
