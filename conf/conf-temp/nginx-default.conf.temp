@@ -2,7 +2,7 @@ server {
     listen       80 default_server;
     
     root   ${NGINX_ROOT};
-	client_max_body_size	${NGINX_CLIENT_MAX_BODY_SIZE};
+    client_max_body_size ${NGINX_CLIENT_MAX_BODY_SIZE};
     index  index.html index.htm index.php;
 
     location / {
