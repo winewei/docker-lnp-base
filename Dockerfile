@@ -85,6 +85,7 @@ RUN curl -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-${PHPUNIT_VER
 
 # conf
 COPY conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+COPY conf/default.conf /usr/local/openresty/nginx/conf/vhosts/default.conf
 COPY conf/conf-temp/. /conf-temp
 
 COPY scripts/. /scripts
