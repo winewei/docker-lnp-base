@@ -83,7 +83,6 @@ RUN curl -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-${PHPUNIT_VER
 
 # conf
 COPY conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
-COPY conf/default.conf /usr/local/openresty/nginx/conf/vhosts/default.conf
 COPY conf/conf-temp/. /conf-temp
 
 COPY scripts/. /scripts
@@ -98,7 +97,7 @@ ENV PARAMS="" \
     GITHUB_TOKEN="" \
     NPM_TOKEN="" \
 
-    PHP_UPLOAD_MAX_FILESIZE="5M" \
+    PHP_UPLOAD_MAX_FILESIZE="8M" \
     PHP_POST_MAX_SIZE="8M" \
     PHP_MAX_EXECUTION_TIME="600" \
     PHP_MAX_INPUT_TIME="600" \
@@ -108,6 +107,6 @@ ENV PARAMS="" \
     PHP_REQUEST_SLOWLOG_TIMEOUT="2" \
 
     NGINX_ROOT="/var/web/www/public" \
-    NGINX_CLIENT_MAX_BODY_SIZE="5m" \
+    NGINX_CLIENT_MAX_BODY_SIZE="8m" \
 
     PHP_ENABLE_LARAVEL_CONFIG_CACHE="false"
