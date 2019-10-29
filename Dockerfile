@@ -33,7 +33,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
 
 # Enable php lib
 RUN apt-get update \
-    && apt-get install --no-install-recommends \
+    && apt-get install -y --no-install-recommends \
                        libfcgi-bin \
                        unzip \
                        git \
@@ -42,7 +42,8 @@ RUN apt-get update \
                        zlib1g-dev \
                        libssl-dev \
                        libargon2-0 \
-                       libpng-dev -y \
+                       libpng-dev \
+                       libjpeg-dev \
     && docker-php-ext-install pdo_mysql \
                               bcmath \
                               pdo \
