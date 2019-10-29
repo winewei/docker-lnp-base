@@ -58,11 +58,12 @@ RUN apt-get update \
                               mysqli \
                               pcntl \
                               soap \
-                              gd \
                               gettext \
                               zip \
                               exif \
                               opcache \
+    && docker-php-ext-configure gd  --with-jpeg-dir=/usr/include \
+    && docker-php-ext-install gd \
     && yes Y | pecl install swoole \
                             mongodb \
                             igbinary \
