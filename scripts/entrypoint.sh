@@ -1,25 +1,30 @@
 #!/usr/bin/env bash
 set -e
 
+replaces=`compgen -v | grep -E 'NGINX_|PHP_' |awk '{print "\${"$0"}"}' | tr '\n' ','`
+replaces="'$replaces'"
 
+chmod +x /scripts/init.d/*
 
 # Start nginx
 if [[ "${PARAMS}" == "nginx" ]]; then
+        # Init config
+        echo "/scripts/init.d/init-${PARAMS}.sh"
+        . /scripts/init.d/init-${PARAMS}.sh
+
         /usr/local/openresty/nginx/sbin/nginx -g "daemon off;"
+
 # Start php
 elif [[ "${PARAMS}" == "php" ]]; then
         # Init config
-        init_scripts="/scripts/init.d/*"
-        for script in $init_scripts; do
-            if [ -f $script -a -x $script ]; then
-                echo "start init script: ${script}"
-                . $script
-            fi
-        done
+        echo "/scripts/init.d/init-${PARAMS}.sh"
+        . /scripts/init.d/init-${PARAMS}.sh
 
         php-fpm
+
+# Init npm/github token
 else
-        # Init npm/github token
+        echo "/scripts/token-init.sh"
         . /scripts/token-init.sh
 fi
 
