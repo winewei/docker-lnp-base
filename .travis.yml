@@ -4,7 +4,6 @@ services: docker
 env:
   - TAG=7.3-fpm-stretch 
   - TAG=7.3.11-fpm-stretch 
-  - TAG=7.2.19-fpm-stretch 
   - TAG=7.2.24-fpm-stretch 
   - TAG=7.2-fpm-stretch 
   - TAG=7.1-fpm-stretch 
