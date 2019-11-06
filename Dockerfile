@@ -31,6 +31,14 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && ln -sf /dev/stderr /usr/local/openresty/nginx/logs/error.log
 
 
+# Install composer & phpunit
+ARG PHPUNIT_VERSION=${PHPUNIT_VERSION}
+RUN curl -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar -L \
+    && chmod +x /usr/local/bin/phpunit \
+    && curl -o composer-setup.php https://getcomposer.org/installer -L \
+    && php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer \
+    && rm -f composer-setup.php
+
 # Enable php lib
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -66,23 +74,15 @@ RUN apt-get update \
     && docker-php-ext-configure gd  --with-jpeg-dir=/usr/include \
     && docker-php-ext-install gd \
     && yes Y | pecl install swoole \
-                            mongodb \
-                            igbinary \
-                            redis \
+    && pecl install mongodb \
+                    igbinary \
+                    redis \
     && docker-php-ext-enable swoole \
                              mongodb \
                              igbinary \
                              redis \
     && rm -rf /tmp/* \
     && rm -rf /var/lib/apt/lists/*
-
-# Install composer & phpunit
-ARG PHPUNIT_VERSION=${PHPUNIT_VERSION}
-RUN curl -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar -L \
-    && chmod +x /usr/local/bin/phpunit \
-    && curl -o composer-setup.php https://getcomposer.org/installer -L \
-    && php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer \
-    && rm -f composer-setup.php
 
 # conf
 COPY conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
