@@ -32,12 +32,22 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
 
 
 # Install composer & phpunit
-ARG PHPUNIT_VERSION=${PHPUNIT_VERSION}
-RUN curl -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar -L \
-    && chmod +x /usr/local/bin/phpunit \
-    && curl -o composer-setup.php https://getcomposer.org/installer -L \
-    && php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer \
-    && rm -f composer-setup.php
+RUN set -eux;\
+    if [ ${PHP_VERSION%.*} =  7.0 ]; then \
+        PHPUNIT_VERSION=6; \
+    elif [ ${PHP_VERSION%.*} = 7.1 ]; then \
+        PHPUNIT_VERSION=7; \
+    elif [ ${PHP_VERSION%.*} =  7.2 ]; then \
+        PHPUNIT_VERSION=8; \
+    else \
+        PHPUNIT_VERSION=8; \
+    fi; \
+    \
+    curl -o /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar -L; \
+    chmod +x /usr/local/bin/phpunit; \
+    curl -o composer-setup.php https://getcomposer.org/installer -L; \
+    php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer \
+    rm -f composer-setup.php
 
 # Enable php lib
 RUN apt-get update \

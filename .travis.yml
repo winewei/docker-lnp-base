@@ -2,11 +2,13 @@ language: bash
 services: docker
 
 env:
-  - TAG=7.3-fpm-stretch PHPUNIT_VERSION=8
-  - TAG=7.3.11-fpm-stretch PHPUNIT_VERSION=8
-  - TAG=7.2.19-fpm-stretch PHPUNIT_VERSION=8
-  - TAG=7.2.24-fpm-stretch PHPUNIT_VERSION=8
-  - TAG=7.2-fpm-stretch PHPUNIT_VERSION=8
+  - TAG=7.3-fpm-stretch 
+  - TAG=7.3.11-fpm-stretch 
+  - TAG=7.2.19-fpm-stretch 
+  - TAG=7.2.24-fpm-stretch 
+  - TAG=7.2-fpm-stretch 
+  - TAG=7.1-fpm-stretch 
+  - TAG=7.0-fpm-stretch 
 
 install:
   - echo "skip"
@@ -20,7 +22,7 @@ script:
     (
       set -Eeuo pipefail
       set -x
-      docker build -t "$image" --build-arg IMAGE_TAG=${TAG} --build-arg PHPUNIT_VERSION=${PHPUNIT_VERSION} .
+      docker build -t "$image" --build-arg IMAGE_TAG=${TAG} .
     )
 after_script:
   - docker images
