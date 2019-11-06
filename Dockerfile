@@ -1,4 +1,4 @@
-ARG IMAGE_TAG=${IMAGE_TAG:-7.2.19-fpm-stretch}
+ARG IMAGE_TAG=${IMAGE_TAG:-7.2-fpm-stretch}
 FROM php:${IMAGE_TAG}
 
 RUN useradd -M www -s /usr/sbin/nologin
@@ -44,6 +44,7 @@ RUN apt-get update \
                        libargon2-0 \
                        libpng-dev \
                        libjpeg-dev \
+                       libzstd-dev \
     && docker-php-ext-install pdo_mysql \
                               bcmath \
                               pdo \
