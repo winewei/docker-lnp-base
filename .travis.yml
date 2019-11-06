@@ -2,7 +2,7 @@ language: bash
 services: docker
 
 env:
-  - TAG=7.4-fpm-stretch PHPUNIT_VERSION=8
+    #  - TAG=7.4-fpm-stretch PHPUNIT_VERSION=8
   - TAG=7.3-fpm-stretch PHPUNIT_VERSION=8
   - TAG=7.2.19-fpm-stretch PHPUNIT_VERSION=8
   - TAG=7.2-fpm-stretch PHPUNIT_VERSION=8
