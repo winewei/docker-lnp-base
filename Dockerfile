@@ -53,6 +53,7 @@ RUN apt-get update \
                        libpng-dev \
                        libjpeg-dev \
                        libzstd-dev \
+					   libzip-dev \
     && docker-php-ext-install pdo_mysql \
                               bcmath \
                               pdo \
