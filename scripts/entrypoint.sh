@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-replaces=`compgen -v | grep -E 'NGINX_|PHP_' |awk '{print "\${"$0"}"}' | tr '\n' ','`
+# Take nginx/php env
+replaces=`compgen -v | grep -E 'NGINX_|PHP_' | awk '{print "\${"$0"}"}' | tr '\n' ','`
 replaces="'$replaces'"
 
 chmod +x /scripts/init.d/*

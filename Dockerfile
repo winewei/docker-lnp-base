@@ -104,9 +104,7 @@ RUN set -eux; \
     \
     docker-php-ext-enable swoole
 
-# conf
-COPY conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
-COPY conf/default.conf /usr/local/openresty/nginx/conf/vhosts/default.conf
+# conf template
 COPY conf/conf-temp/. /conf-temp
 
 COPY scripts/. /scripts
@@ -119,7 +117,8 @@ ENTRYPOINT ["/scripts/entrypoint.sh"]
 
 ENV PARAMS="" \
     GITHUB_TOKEN="" \
-    NPM_TOKEN="" \
+    GITHUB_USER="" \
+    COMPOSER_AUTH="" \
 
     PHP_UPLOAD_MAX_FILESIZE="8M" \
     PHP_POST_MAX_SIZE="8M" \
@@ -129,6 +128,13 @@ ENV PARAMS="" \
 
     PHP_REQUEST_TERMINATE_TIMEOUT="65" \
     PHP_REQUEST_SLOWLOG_TIMEOUT="2" \
+    PHP_PROCESS_CONTROL_TIMEOUT="60s" \
+    PHP_PM="dynamic" \
+    PHP_PM_MAX_CHILDREN="500" \
+    PHP_PM_START_SERVERS="10" \
+    PHP_PM_MIN_SPARE_SERVERS="10" \
+    PHP_PM_MAX_SPARE_SERVERS="50" \
+    PHP_PM_MAX_REQUESTS="102400" \
 
     NGINX_ROOT="/var/web/www/public" \
     NGINX_CLIENT_MAX_BODY_SIZE="8m" \
