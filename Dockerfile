@@ -116,8 +116,11 @@ EXPOSE 80 9000
 ENTRYPOINT ["/scripts/entrypoint.sh"]
 
 ENV PARAMS="" \
-    GITHUB_TOKEN="" \
-    GITHUB_USER="" \
+
+    GIT_USER="" \
+    GIT_TOKEN="" \
+    GIT_HOST_SCHEME="https" \
+    GIT_HOST="github.com" \
     COMPOSER_AUTH="" \
 
     PHP_UPLOAD_MAX_FILESIZE="8M" \
