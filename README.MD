@@ -110,14 +110,14 @@ COMPOSER_AUTH=""
 # default is "" , can input nginx,php
 PARAMS=""
 
-# php.ini
+# default php.ini conf
 PHP_UPLOAD_MAX_FILESIZE="8M" 
 PHP_POST_MAX_SIZE="8M" 
 PHP_MAX_EXECUTION_TIME="600" 
 PHP_MAX_INPUT_TIME="600" 
 PHP_MEMORY_LIMIT="128M" 
 
-# php-fpm 
+# default php-fpm conf
 PHP_REQUEST_TERMINATE_TIMEOUT="65" 
 PHP_REQUEST_SLOWLOG_TIMEOUT="2" 
 PHP_PROCESS_CONTROL_TIMEOUT="60s"
@@ -128,11 +128,11 @@ PHP_PM_MIN_SPARE_SERVERS="10"
 PHP_PM_MAX_SPARE_SERVERS="50"
 PHP_PM_MAX_REQUESTS="102400"
 
-# nginx vhost
+# default  nginx vhost
 NGINX_ROOT="/var/web/www/public" 
 NGINX_CLIENT_MAX_BODY_SIZE="8m" 
 
-# php larvael cache 
+# php larvael enable cache 
 PHP_ENABLE_LARAVEL_CONFIG_CACHE="false"
 ```
 
