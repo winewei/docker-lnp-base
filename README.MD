@@ -171,12 +171,17 @@ docker run -ti --rm \
 ```
 
 
-## Build image
+## Build image example 
 
-* demo project
+* [demo project](https://github.com/winewei/php-docker-demo)
 
 ```
-
+php-docker-demo/
+├── Dockerfile
+├── README.MD
+├── composer.json
+└── public
+    └── index.php
 ```
 
 * Docker file 
@@ -216,6 +221,8 @@ RUN composer install --no-dev --no-progress -o
 docker built -t example:v1 \
 --build-arg GIT_USER="test-bot" \
 --build-arg GIT_TOKEN="xxxxx" \
+--build-arg GIT_HOST="demo.com" \
+--build-arg GIT_HOST_SCHEME="http" \
 .
 ```
 
