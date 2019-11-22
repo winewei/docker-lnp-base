@@ -23,7 +23,7 @@ elif [[ "${PARAMS}" == "php" ]]; then
 
         php-fpm
 else
-        echo "Please input env: nginx,php or exec what's u need"
+        echo "Please input env: nginx,php or exec input everything"
 fi
 
 exec "$@"
