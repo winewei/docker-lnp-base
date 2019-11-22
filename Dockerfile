@@ -1,7 +1,6 @@
 ARG IMAGE_TAG=${IMAGE_TAG:-7.2-fpm-stretch}
 FROM php:${IMAGE_TAG}
 
-RUN useradd -M www -s /usr/sbin/nologin
 
 # Install openresty
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
@@ -109,26 +108,22 @@ COPY conf/conf-temp/. /conf-temp
 
 COPY scripts/. /scripts
 
-WORKDIR /var/web/www
+WORKDIR /srv
 
 EXPOSE 80 9000
 
 ENTRYPOINT ["/scripts/entrypoint.sh"]
 
 ENV PARAMS="" \
-
-    GIT_USER="" \
-    GIT_TOKEN="" \
-    GIT_HOST_SCHEME="https" \
-    GIT_HOST="github.com" \
-    COMPOSER_AUTH="" \
-
+    \
     PHP_UPLOAD_MAX_FILESIZE="8M" \
     PHP_POST_MAX_SIZE="8M" \
+    PHP_MAX_FILE_UPLOADS="20" \
     PHP_MAX_EXECUTION_TIME="600" \
     PHP_MAX_INPUT_TIME="600" \
     PHP_MEMORY_LIMIT="128M" \
-
+    PHP_DATE_TIMEZONE="UTC" \
+    \
     PHP_REQUEST_TERMINATE_TIMEOUT="65" \
     PHP_REQUEST_SLOWLOG_TIMEOUT="2" \
     PHP_PROCESS_CONTROL_TIMEOUT="60s" \
@@ -138,8 +133,10 @@ ENV PARAMS="" \
     PHP_PM_MIN_SPARE_SERVERS="2" \
     PHP_PM_MAX_SPARE_SERVERS="8" \
     PHP_PM_MAX_REQUESTS="102400" \
-
-    NGINX_ROOT="/var/web/www/public" \
+    \
+    NGINX_ROOT="/srv/public" \
     NGINX_CLIENT_MAX_BODY_SIZE="8m" \
-
-    PHP_ENABLE_LARAVEL_CONFIG_CACHE="false"
+    \
+    PHP_ENABLE_LARAVEL_CONFIG_CACHE="false" \
+    \
+    PHP_RW_DIRECTORY=""

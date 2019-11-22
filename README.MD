@@ -82,29 +82,6 @@ Zend OPcache
 # ENV
 * Default ENV in `Dockerfile`
 ```
-# BUILD ARGS
-# usually will be used to do some unit test,
-# and build final image
-
-## pull private repo
-# git user
-GIT_USER=""
-
-# git password or private token
-GIT_TOKEN=""
-
-# git server scheme , default is https
-GIT_HOST_SCHEME=""
-
-# git service host, default is github.com
-GIT_HOST=""
-
-# composer auth token, in general, 
-# used to pull private repo
-COMPOSER_AUTH=""
-
-#################################
-
 # WORKLOAD ARGS
 
 # default is "" , can input nginx,php
@@ -113,9 +90,12 @@ PARAMS=""
 # default php.ini conf
 PHP_UPLOAD_MAX_FILESIZE="8M" 
 PHP_POST_MAX_SIZE="8M" 
+PHP_MAX_FILE_UPLOADS="20"
 PHP_MAX_EXECUTION_TIME="600" 
 PHP_MAX_INPUT_TIME="600" 
 PHP_MEMORY_LIMIT="128M" 
+## you can set date.timezone PHP_DATE_TIMEZONE="Asia/Shanghai"
+PHP_DATE_TIMEZONE="UTC"
 
 # default php-fpm conf
 PHP_REQUEST_TERMINATE_TIMEOUT="65" 
@@ -129,11 +109,17 @@ PHP_PM_MAX_SPARE_SERVERS="8"
 PHP_PM_MAX_REQUESTS="102400"
 
 # default  nginx vhost
-NGINX_ROOT="/var/web/www/public" 
+NGINX_ROOT="/srv/public" 
 NGINX_CLIENT_MAX_BODY_SIZE="8m" 
 
 # php larvael enable cache 
 PHP_ENABLE_LARAVEL_CONFIG_CACHE="false"
+
+# set php code dirscroty 777
+# PHP_RW_DIRECTORY="${WORKDIR}/a,${WORKDIR}/b,${WORKDIR}/c"
+# or PHP_RW_DIRECTORY="a,b,c"
+# will set ${WORKDIR}/a ${WORKDIR}/b ${WORKDIR}/c 777
+PHP_RW_DIRECTORY=""
 ```
 
 # HOW TO USE
@@ -157,6 +143,7 @@ docker run -ti --rm \
   -e PARAMS=php \
   -e PHP_POST_MAX_SIZE="8M" \
   -e PHP_MAX_EXECUTION_TIME="600" \
+  -e PHP_RW_DIRECTORY="/srv/a,/srv/b,/srv/c" \
   pristtlt/lnp-base:7.2-fpm-stretch
 ```
 
@@ -189,44 +176,22 @@ php-docker-demo/
 ```
 FROM pristtlt/lnp-base:7.2-fpm-stretch AS installer
 
-ARG TMP_GIT_USER=""
-ARG TMP_GIT_TOKEN=""
-ARG TMP_GIT_HOST_SCHEME=""
-ARG TMP_GIT_HOST=""
+COPY . .
 
-ENV GIT_USER=$TMP_GIT_USER \
-    GIT_TOKEN=$TMP_GIT_TOKEN \
-    GIT_HOST=$TMP_GIT_HOST \
-    GIT_HOST_SCHEME=$TMP_GIT_HOST_SCHEME
+RUN composer install
 
-# confirm initialize script run complete
-# unnecessary in process
+# build image
+FROM pristtlt/lnp-base:7.2-fpm-stretch  AS build
 
-#RUN cat /scripts/token-init.sh
-RUN bash /scripts/token-init.sh
-#RUN cat ~/.gitconfig
+COPY . .
 
- COPY . .
-
- RUN composer install
-
- # build image
- FROM pristtlt/lnp-base:7.2-fpm-stretch  AS build
-
- COPY . .
-
- RUN composer install --no-dev --no-progress -o
+RUN composer install --no-dev --no-progress -o
 ```
 
 * build a image
 
 ```
-docker built -t example:v1 \
---build-arg TMP_GIT_USER="test-bot" \
---build-arg TMP_GIT_TOKEN="xxxxx" \
---build-arg TMP_GIT_HOST="demo.com" \
---build-arg TMP_GIT_HOST_SCHEME="http" \
-.
+docker built -t example:v1 .
 ```
 
 # 

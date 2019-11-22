@@ -22,11 +22,8 @@ elif [[ "${PARAMS}" == "php" ]]; then
         . /scripts/init.d/init-${PARAMS}.sh
 
         php-fpm
-
-# Init npm/github token
 else
-        echo "/scripts/token-init.sh"
-        . /scripts/token-init.sh
+        echo "Please input env: nginx,php or exec input everything"
 fi
 
 exec "$@"

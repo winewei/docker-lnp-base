@@ -9,11 +9,11 @@ daemonize = no
 [www]
 listen = 0.0.0.0:9000
 listen.backlog = 8192
-listen.owner = www
-listen.group = www
+listen.owner = www-data
+listen.group = www-data
 listen.mode = 0666
-user = www
-group = www
+user = www-data
+group = www-data
 pm = ${PHP_PM}
 pm.max_children = ${PHP_PM_MAX_CHILDREN} 
 pm.start_servers = ${PHP_PM_START_SERVERS} 
