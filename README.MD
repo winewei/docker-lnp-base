@@ -90,9 +90,12 @@ PARAMS=""
 # default php.ini conf
 PHP_UPLOAD_MAX_FILESIZE="8M" 
 PHP_POST_MAX_SIZE="8M" 
+PHP_MAX_FILE_UPLOADS="20"
 PHP_MAX_EXECUTION_TIME="600" 
 PHP_MAX_INPUT_TIME="600" 
 PHP_MEMORY_LIMIT="128M" 
+## you can set date.timezone PHP_DATE_TIMEZONE="Asia/Shanghai"
+PHP_DATE_TIMEZONE="UTC"
 
 # default php-fpm conf
 PHP_REQUEST_TERMINATE_TIMEOUT="65" 
@@ -106,15 +109,16 @@ PHP_PM_MAX_SPARE_SERVERS="8"
 PHP_PM_MAX_REQUESTS="102400"
 
 # default  nginx vhost
-NGINX_ROOT="/var/web/www/public" 
+NGINX_ROOT="/srv/public" 
 NGINX_CLIENT_MAX_BODY_SIZE="8m" 
 
 # php larvael enable cache 
 PHP_ENABLE_LARAVEL_CONFIG_CACHE="false"
 
 # set php code dirscroty 777
-# PHP_RW_DIRECTORY=/srv/a,/srv/b,/srv/c,...
-# will set /srv/a /srv/b /srv/c 777
+# PHP_RW_DIRECTORY="${WORKDIR}/a,${WORKDIR}/b,${WORKDIR}/c"
+# or PHP_RW_DIRECTORY="a,b,c"
+# will set ${WORKDIR}/a ${WORKDIR}/b ${WORKDIR}/c 777
 PHP_RW_DIRECTORY=""
 ```
 
@@ -139,6 +143,7 @@ docker run -ti --rm \
   -e PARAMS=php \
   -e PHP_POST_MAX_SIZE="8M" \
   -e PHP_MAX_EXECUTION_TIME="600" \
+  -e PHP_RW_DIRECTORY="/srv/a,/srv/b,/srv/c" \
   pristtlt/lnp-base:7.2-fpm-stretch
 ```
 
