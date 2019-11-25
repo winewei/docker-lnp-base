@@ -41,6 +41,7 @@ igbinary
 json
 libxml
 mbstring
+memcached
 mongodb
 mysqli
 mysqlnd

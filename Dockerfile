@@ -63,6 +63,7 @@ RUN apt-get update \
                        libjpeg-dev \
                        libzstd-dev \
                        libzip-dev \
+                       libmemcached-dev \
     && docker-php-ext-install pdo_mysql \
                               bcmath \
                               pdo \
@@ -86,9 +87,11 @@ RUN apt-get update \
     && pecl install mongodb \
                     igbinary \
                     redis \
+    && echo yes | pecl install memcached \
     && docker-php-ext-enable redis \
                              mongodb \
                              igbinary \
+                             memcached \
     && rm -rf /tmp/* \
     && rm -rf /var/lib/apt/lists/*
 
