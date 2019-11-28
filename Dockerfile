@@ -1,4 +1,4 @@
-ARG IMAGE_TAG=${IMAGE_TAG:-7.2-fpm-stretch}
+ARG IMAGE_TAG=7.2-fpm-stretch
 FROM php:${IMAGE_TAG}
 
 
