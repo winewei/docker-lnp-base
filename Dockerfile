@@ -26,6 +26,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir /usr/local/openresty/nginx/conf/vhosts -p \
+    && rm -f /usr/local/openresty/nginx/conf/nginx.conf \
     && ln -sf /dev/stdout /usr/local/openresty/nginx/logs/access.log \
     && ln -sf /dev/stderr /usr/local/openresty/nginx/logs/error.log
 
@@ -92,6 +93,8 @@ RUN apt-get update \
                              mongodb \
                              igbinary \
                              memcached \
+    && rm -f /usr/local/etc/php-fpm.conf \
+    && rm -f /usr/local/etc/php/php.ini \
     && rm -rf /tmp/* \
     && rm -rf /var/lib/apt/lists/*
 
