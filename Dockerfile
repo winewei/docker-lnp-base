@@ -106,6 +106,13 @@ RUN set -eux; \
     \
     docker-php-ext-enable swoole
 
+# ONBUILD ARG INSTALL_SWOOLE=false
+# ONBUILD RUN [ "${INSTALL_SWOOLE}" = "true" ] \
+#         && echo "Install swoole" \
+#         && bash /scripts/install-swoole.sh \
+#         && docker-php-ext-enable swoole \
+#         || echo "Do not install swoole"
+
 # conf template
 COPY conf/conf-temp/. /conf-temp
 
