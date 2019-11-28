@@ -2,8 +2,17 @@
 set -e
 
 if [[ "${PARAMS}" == "php" ]]; then
-    envsubst $replaces < "/conf-temp/php.ini-production.temp" > "/usr/local/etc/php/php.ini"   
-    envsubst $replaces < "/conf-temp/php-fpm.conf.temp" > "/usr/local/etc/php-fpm.conf"
+    # if exist config file, will skip generate
+    # to fix:
+    #    when container been mount new config files via readonly volumes will trigger ERROR
+    #
+    if [ ! -f /usr/local/etc/php/php.ini ]; then
+        envsubst $replaces < "/conf-temp/php.ini-production.temp" > "/usr/local/etc/php/php.ini" 
+    fi
+
+    if [ ! -f /usr/local/etc/php-fpm.conf ]; then
+        cp /conf-temp/php-fpm.conf.temp /usr/local/etc/php-fpm.conf
+    fi
 
     if [[ "${PHP_ENABLE_LARAVEL_CONFIG_CACHE}" == "true" ]]; then
         echo "init laravel config:cache"
