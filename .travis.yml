@@ -1,28 +1,37 @@
+if: branch =~ ^master$|^test
 language: bash
 services: docker
 
 env:
-  - TAG=7.3-fpm-stretch 
-  - TAG=7.3.11-fpm-stretch 
-  - TAG=7.2.24-fpm-stretch 
-  - TAG=7.2-fpm-stretch 
-  - TAG=7.1-fpm-stretch 
-  - TAG=7.0-fpm-stretch 
+  - OFFICIAL_TAG=7.3-fpm-stretch 
+  - OFFICIAL_TAG=7.2-fpm-stretch 
+  - OFFICIAL_TAG=7.1-fpm-stretch 
+  - OFFICIAL_TAG=7.0-fpm-stretch 
 
 install:
   - echo "skip"
 
 before_script:
   - env | sort
-  - image="${DOCKER_REPO}:${TAG}"
 
-script:
-  - |
-    (
-      set -Eeuo pipefail
-      set -x
-      docker build -t "$image" --build-arg IMAGE_TAG=${TAG} .
+script: |-
+  if [ "${TRAVIS_BRANCH}" == "master" ]; then
+    export image_tags=(
+      # example: 7.3-fpm-stretch
+      "${DOCKER_REPO}:${OFFICIAL_TAG}"
     )
+  else
+    export image_tags=(
+      # example: 7.3-fpm-stretch-xx-dev
+      "${DOCKER_REPO}:${OFFICIAL_TAG}-${TRAVIS_BUILD_NUMBER}-dev"
+    )
+  fi
+
+  for tag in ${image_tags[@]};
+  do
+    docker build -t $tag --build-arg IMAGE_TAG=${OFFICIAL_TAG} .
+  done
+
 after_script:
   - docker images
 
@@ -30,4 +39,4 @@ deploy:
 - provider: script
   script: >- 
    docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD}
-   && docker push $image
+   && for tag in ${image_tags[@]}; do docker push -t $tag; done
