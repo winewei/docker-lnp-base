@@ -149,6 +149,7 @@ ENV PARAMS="" \
     \
     NGINX_ROOT="/srv/public" \
     NGINX_CLIENT_MAX_BODY_SIZE="8m" \
+    NGINX_FASTCGI_PASS="127.0.0.1:9000" \
     \
     PHP_ENABLE_LARAVEL_CONFIG_CACHE="false" \
     \

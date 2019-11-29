@@ -120,6 +120,7 @@ PHP_PM_MAX_REQUESTS="102400"
 # default  nginx vhost
 NGINX_ROOT="/srv/public" 
 NGINX_CLIENT_MAX_BODY_SIZE="8m" 
+NGINX_FASTCGI_PASS="127.0.0.1:9000"
 
 # php larvael enable cache 
 PHP_ENABLE_LARAVEL_CONFIG_CACHE="false"
