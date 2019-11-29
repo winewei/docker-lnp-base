@@ -40,3 +40,7 @@ deploy:
   script: >- 
    docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD}
    && for tag in ${image_tags[@]}; do docker push -t $tag; done
+  on:
+    branch: 
+    - master
+    - test
