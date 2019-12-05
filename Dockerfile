@@ -1,5 +1,5 @@
 ARG IMAGE_TAG=7.2-fpm-stretch
-ARG SWOOLE_VERSION=4.4.12
+ARG swoole_version=4.4.12
 FROM php:${IMAGE_TAG}
 
 
@@ -90,7 +90,7 @@ RUN apt-get update \
                     igbinary \
                     redis \
     && echo yes | pecl install memcached \
-    && yes Y | pecl install http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz \
+    && yes Y | pecl install http://pecl.php.net/get/swoole-${swoole_version}.tgz \
     && docker-php-ext-enable redis \
                              mongodb \
                              igbinary \
