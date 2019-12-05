@@ -14,7 +14,7 @@
 ## Default `WORKDIR`
 
 ```
-WORKDIR /var/web/www
+WORKDIR /srv
 ```
 # Notification
 
