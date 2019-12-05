@@ -3,10 +3,11 @@ language: bash
 services: docker
 
 env:
-  - OFFICIAL_TAG=7.3-fpm-stretch SWOOLE_VERSION=4.4.12
-  - OFFICIAL_TAG=7.2-fpm-stretch SWOOLE_VERSION=4.4.12
-  - OFFICIAL_TAG=7.1-fpm-stretch SWOOLE_VERSION=4.4.12
-  - OFFICIAL_TAG=7.0-fpm-stretch SWOOLE_VERSION=2.2.0
+  - OFFICIAL_TAG=7.3.12-fpm-stretch SECOND_TAG=v0.1 SWOOLE_VERSION=4.4.12
+  - OFFICIAL_TAG=7.2.25-fpm-stretch SECOND_TAG=v0.1 SWOOLE_VERSION=4.4.12
+  - OFFICIAL_TAG=7.1.33-fpm-stretch SECOND_TAG=v0.1 SWOOLE_VERSION=4.4.12
+  # php 7.0 newest swoole version is 2.2.0
+  - OFFICIAL_TAG=7.0.33-fpm-stretch SECOND_TAG=v0.1 SWOOLE_VERSION=2.2.0
 
 install:
   - echo "skip"
@@ -15,16 +16,28 @@ before_script:
   - env | sort
 
 script: |-
+  set -e
+
   if [ "${TRAVIS_BRANCH}" == "master" ]; then
     export image_tags=(
       # example: 7.3-fpm-stretch
+      "${DOCKER_REPO}:${OFFICIAL_TAG%.*}-${OFFICIAL_TAG#*-}"
+      # example: 7.3.12-fpm-stretch
       "${DOCKER_REPO}:${OFFICIAL_TAG}"
+      # example: 7.3.12-fpm-stretch-v0.1.xx
+      "${DOCKER_REPO}:${OFFICIAL_TAG}-${SECOND_TAG}.${TRAVIS_BUILD_NUMBER}"
     )
+
+    export deploy_script="docker push ${image_tags[0]} && docker push ${image_tags[1]} && docker push ${image_tags[2]}"
+    # echo $DEPLOY_SCRIPT
   else
     export image_tags=(
-      # example: 7.3-fpm-stretch-xx-dev
-      "${DOCKER_REPO}:${OFFICIAL_TAG}-${TRAVIS_BUILD_NUMBER}-dev"
+      # example: 7.3.12-fpm-stretch-v0.1.xx-dev
+      "${DOCKER_REPO}:${OFFICIAL_TAG}-${SECOND_TAG}.${TRAVIS_BUILD_NUMBER}-dev"
     )
+
+    export deploy_script="docker push ${image_tags[0]}"
+    # echo $DEPLOY_SCRIPT;
   fi
 
   for tag in ${image_tags[@]};
@@ -37,8 +50,8 @@ after_script:
 
 deploy:
 - provider: script
-  script: >- 
-   docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD}
-   && for tag in ${image_tags[@]}; do docker push -t $tag; done
+  script: >-
+    docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD}
+    && ${deploy_script}
   on:
     all_branches: true
