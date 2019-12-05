@@ -3,10 +3,10 @@ language: bash
 services: docker
 
 env:
-  - OFFICIAL_TAG=7.3-fpm-stretch 
-  - OFFICIAL_TAG=7.2-fpm-stretch 
-  - OFFICIAL_TAG=7.1-fpm-stretch 
-  - OFFICIAL_TAG=7.0-fpm-stretch 
+  - OFFICIAL_TAG=7.3-fpm-stretch SWOOLE_VERSION=4.4.12
+  - OFFICIAL_TAG=7.2-fpm-stretch SWOOLE_VERSION=4.4.12
+  - OFFICIAL_TAG=7.1-fpm-stretch SWOOLE_VERSION=4.4.12
+  - OFFICIAL_TAG=7.0-fpm-stretch SWOOLE_VERSION=2.2.0
 
 install:
   - echo "skip"
@@ -29,7 +29,7 @@ script: |-
 
   for tag in ${image_tags[@]};
   do
-    docker build -t $tag --build-arg IMAGE_TAG=${OFFICIAL_TAG} .
+    docker build -t $tag --build-arg IMAGE_TAG=${OFFICIAL_TAG} --build-arg SWOOLE_VERSION=${SWOOLE_VERSION} .
   done
 
 after_script:

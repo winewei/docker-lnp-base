@@ -1,4 +1,5 @@
 ARG IMAGE_TAG=7.2-fpm-stretch
+ARG SWOOLE_VERSION=4.4.12
 FROM php:${IMAGE_TAG}
 
 
