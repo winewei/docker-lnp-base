@@ -1,6 +1,8 @@
 ARG IMAGE_TAG=7.2-fpm-stretch
+
 FROM php:${IMAGE_TAG}
 
+ARG SWOOLE_VERSION=4.4.12
 
 # Install openresty
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
@@ -89,32 +91,16 @@ RUN apt-get update \
                     igbinary \
                     redis \
     && echo yes | pecl install memcached \
+    && yes Y | pecl install http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz \
     && docker-php-ext-enable redis \
                              mongodb \
                              igbinary \
                              memcached \
+                             swoole \
     && rm -f /usr/local/etc/php-fpm.conf \
     && rm -f /usr/local/etc/php/php.ini \
     && rm -rf /tmp/* \
     && rm -rf /var/lib/apt/lists/*
-
-# Install swoole lib
-RUN set -eux; \
-    if [ ${PHP_VERSION%.*} = 7.0 ]; then \
-       # if PHP_VERSION is 7.0, the newest swoole version is 2.2.0
-       yes Y | pecl install http://pecl.php.net/get/swoole-2.2.0.tgz; \
-    else \
-       yes Y | pecl install swoole; \
-    fi; \
-    \
-    docker-php-ext-enable swoole
-
-# ONBUILD ARG INSTALL_SWOOLE=false
-# ONBUILD RUN [ "${INSTALL_SWOOLE}" = "true" ] \
-#         && echo "Install swoole" \
-#         && bash /scripts/install-swoole.sh \
-#         && docker-php-ext-enable swoole \
-#         || echo "Do not install swoole"
 
 # conf template
 COPY conf/conf-temp/. /conf-temp
@@ -149,6 +135,7 @@ ENV PARAMS="" \
     \
     NGINX_ROOT="/srv/public" \
     NGINX_CLIENT_MAX_BODY_SIZE="8m" \
+    NGINX_FASTCGI_PASS="127.0.0.1:9000" \
     \
     PHP_ENABLE_LARAVEL_CONFIG_CACHE="false" \
     \
