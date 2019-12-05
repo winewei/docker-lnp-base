@@ -29,7 +29,7 @@ script: |-
 
   for tag in ${image_tags[@]};
   do
-    docker build -t $tag --build-arg IMAGE_TAG=${OFFICIAL_TAG} --build-arg SWOOLE_VERSION=${SWOOLE_VERSION} .
+    docker build -t $tag --build-arg IMAGE_TAG=${OFFICIAL_TAG} --build-arg swoole_version=${SWOOLE_VERSION} .
   done
 
 after_script:
