@@ -90,7 +90,7 @@ RUN apt-get update \
                     igbinary \
                     redis \
     && echo yes | pecl install memcached \
-    && yes Y | pecl install http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz
+    && yes Y | pecl install http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz \
     && docker-php-ext-enable redis \
                              mongodb \
                              igbinary \
