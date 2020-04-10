@@ -54,6 +54,7 @@ RUN set -eux;\
 # Enable php lib
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+                       vim \
                        libfcgi-bin \
                        unzip \
                        git \
