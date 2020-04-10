@@ -3,11 +3,11 @@ language: bash
 services: docker
 
 env:
-  - OFFICIAL_TAG=7.3.12-fpm-stretch SECOND_TAG=v0.1 SWOOLE_VERSION=4.4.12
-  - OFFICIAL_TAG=7.2.25-fpm-stretch SECOND_TAG=v0.1 SWOOLE_VERSION=4.4.12
-  - OFFICIAL_TAG=7.1.33-fpm-stretch SECOND_TAG=v0.1 SWOOLE_VERSION=4.4.12
+  - OFFICIAL_TAG=7.3.12-fpm-stretch SECOND_TAG=v0.2 SWOOLE_VERSION=4.4.12
+  - OFFICIAL_TAG=7.2.25-fpm-stretch SECOND_TAG=v0.2 SWOOLE_VERSION=4.4.12
+  - OFFICIAL_TAG=7.1.33-fpm-stretch SECOND_TAG=v0.2 SWOOLE_VERSION=4.4.12
   # php 7.0 newest swoole version is 2.2.0
-  - OFFICIAL_TAG=7.0.33-fpm-stretch SECOND_TAG=v0.1 SWOOLE_VERSION=2.2.0
+  - OFFICIAL_TAG=7.0.33-fpm-stretch SECOND_TAG=v0.2 SWOOLE_VERSION=2.2.0
 
 install:
   - echo "skip"
@@ -24,6 +24,8 @@ script: |-
       "${DOCKER_REPO}:${OFFICIAL_TAG%.*}-${OFFICIAL_TAG#*-}"
       # example: 7.3.12-fpm-stretch
       "${DOCKER_REPO}:${OFFICIAL_TAG}"
+      # example: 7.3.12-fpm-stretch-v0.1
+      "${DOCKER_REPO}:${OFFICIAL_TAG}-${SECOND_TAG}"
       # example: 7.3.12-fpm-stretch-v0.1.xx
       "${DOCKER_REPO}:${OFFICIAL_TAG}-${SECOND_TAG}.${TRAVIS_BUILD_NUMBER}"
     )
