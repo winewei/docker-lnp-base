@@ -2,7 +2,7 @@
 set -e
 
 
-if [[ "${PARAMS}" == "nginx" ]]; then
+if [[ "${PARAMS}" == "nginx" || "${PARAMS}" == "all" ]]; then
   # if exist config file, will skip generate
   # to fix:
   #    when container been mount new config files via readonly volumes will trigger ERROR
@@ -15,5 +15,5 @@ if [[ "${PARAMS}" == "nginx" ]]; then
   if [ ! -f /usr/local/openresty/nginx/conf/nginx.conf ]; then
     mkdir -p /usr/local/openresty/nginx/conf/;
     envsubst $replaces < "/conf-temp/nginx.conf.temp" > "/usr/local/openresty/nginx/conf/nginx.conf";
-  fi
+  fi 
 fi

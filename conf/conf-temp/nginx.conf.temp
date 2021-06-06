@@ -84,9 +84,10 @@ http
 		text/x-component
 		text/x-cross-domain-policy;
 
-	log_format  access  '$remote_addr - $remote_user [$time_local] "$request"'
-		'$status $body_bytes_sent "$http_referer"'
-		'"$http_user_agent" $http_x_forwarded_for';
+	#log_format  access  '$remote_addr - $remote_user [$time_local] "$request"'
+	#	'$status $body_bytes_sent "$http_referer"'
+	#	'"$http_user_agent" $http_x_forwarded_for';
+	log_format main ${NGINX_ACCESS_LOG_FORMAT};
 
 	include vhosts/*.conf;
 }

@@ -2,7 +2,13 @@ server {
     listen       80 default_server;
     
     root   ${NGINX_ROOT};
+    keepalive_timeout ${NGINX_KEEPALIVE_TIMEOUT};
+    client_header_timeout ${NGINX_CLIENT_HEADER_TIMEOUT};
+    client_body_timeout ${NGINX_CLIENT_BODY_TIMEOUT};
     client_max_body_size ${NGINX_CLIENT_MAX_BODY_SIZE};
+
+    access_log /dev/stdout main;
+    
     index  index.html index.htm index.php;
 
     location / {
@@ -14,6 +20,10 @@ server {
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
+
+        fastcgi_connect_timeout ${NGINX_FASTCGI_CONNECT_TIMEOUT};
+        fastcgi_send_timeout ${NGINX_FASTCGI_SEND_TIMEOUT};
+        fastcgi_read_timeout ${NGINX_FASTCGI_READ_TIMEOUT};
     }
     location ~ /\.ht {
         deny all;
