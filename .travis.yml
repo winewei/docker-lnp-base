@@ -6,7 +6,6 @@ env:
 env:
   - OFFICIAL_TAG=8.0.3-fpm-buster SECOND_TAG=v0.2 SWOOLE_VERSION=4.6.6 COMPOSER_VERSION=2.0.11
   - OFFICIAL_TAG=7.4.16-fpm-buster SECOND_TAG=v0.2 SWOOLE_VERSION=4.6.6 COMPOSER_VERSION=2.0.11
-#  - OFFICIAL_TAG=7.3.27-fpm-buster SECOND_TAG=v0.3 SWOOLE_VERSION=4.6.6 COMPOSER_VERSION=1.10.21
 #  # lock php version7.2.34, 7.1.33, 7.0.33
 #  - OFFICIAL_TAG=7.2.34-fpm-stretch SECOND_TAG=v0.3 SWOOLE_VERSION=4.3.3 COMPOSER_VERSION=1.10.21
 #  # swoole 4.6 will no longer support php 7.1,  https://pecl.php.net/package-changelog.php?package=swoole
@@ -45,7 +44,7 @@ script: |-
 
   for tag in ${image_tags[@]};
   do
-    docker build -t $tag --build-arg IMAGE_TAG=${OFFICIAL_TAG} --build-arg SWOOLE_VERSION=${SWOOLE_VERSION} .
+    docker build -t $tag --build-arg IMAGE_TAG=${OFFICIAL_TAG} --build-arg SWOOLE_VERSION=${SWOOLE_VERSION} --build-arg COMPOSER_VERSION=${COMPOSER_VERSION}.
   done
 
 after_script:
