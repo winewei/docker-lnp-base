@@ -5,7 +5,7 @@ services: docker
 env:
 env:
   - OFFICIAL_TAG=8.0.3-fpm-buster SECOND_TAG=v0.2 SWOOLE_VERSION=4.6.6 COMPOSER_VERSION=2.0.11
-#  - OFFICIAL_TAG=7.4.16-fpm-buster SECOND_TAG=v0.1 SWOOLE_VERSION=4.6.6 COMPOSER_VERSION=1.10.21
+  - OFFICIAL_TAG=7.4.16-fpm-buster SECOND_TAG=v0.2 SWOOLE_VERSION=4.6.6 COMPOSER_VERSION=2.0.11
 #  - OFFICIAL_TAG=7.3.27-fpm-buster SECOND_TAG=v0.3 SWOOLE_VERSION=4.6.6 COMPOSER_VERSION=1.10.21
 #  # lock php version7.2.34, 7.1.33, 7.0.33
 #  - OFFICIAL_TAG=7.2.34-fpm-stretch SECOND_TAG=v0.3 SWOOLE_VERSION=4.3.3 COMPOSER_VERSION=1.10.21
@@ -31,7 +31,7 @@ script: |-
       "${DOCKER_REPO}:${OFFICIAL_TAG}-${SECOND_TAG}.${TRAVIS_BUILD_NUMBER}"
     )
 
-    export deploy_script="docker push ${image_tags[0]} && docker push ${image_tags[1]} && docker push ${image_tags[2]}"
+    export deploy_script="docker push ${image_tags[0]} && docker push ${image_tags[1]}"
     # echo $DEPLOY_SCRIPT
   else
     export image_tags=(
