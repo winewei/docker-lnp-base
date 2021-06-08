@@ -251,7 +251,6 @@ ENV PARAMS="" \
     PHP_EMERGENCY_RESTART_THRESHOLD="10" \
     PHP_EMERGENCY_RESTART_INTERVAL="1m" \
     PHP_PROCESS_CONTROL_TIMEOUT="60s" \
-    PHP_DAEMONIZE="no" \
     PHP_LISTEN="0.0.0.0:9000" \
     PHP_LISTEN_BACKLOG="8192" \
     PHP_LISTEN_OWNER="www-data" \
@@ -272,7 +271,6 @@ ENV PARAMS="" \
     PHP_SLOWLOG="/proc/self/fd/2" \
     PHP_RLIMIT_FILES="65535" \
     PHP_RLIMIT_CORE="0" \
-    PHP_CATCH_WORKERS_OUTPUT="yes" \
 
     # nginx config
     NGINX_ROOT="/srv/public" \
