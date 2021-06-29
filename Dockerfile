@@ -63,7 +63,8 @@ RUN set -eux; \
                        libzstd-dev \
                        libzip-dev \
                        libmemcached-dev \
-                       libonig-dev; \
+                       libonig-dev \
+                       libfreetype6-dev; \
     docker-php-ext-install pdo_mysql \
                            bcmath \
                            sockets \
@@ -75,8 +76,17 @@ RUN set -eux; \
                            gettext \
                            zip \
                            exif \
-                           opcache \
-                           gd; \
+                           opcache; \
+    # install freetype
+    if [ ${PHP_VERSION%.*} =  8.0 ]; then \
+       docker-php-ext-configure gd --enable-gd --with-freetype; \
+    if [ ${PHP_VERSION%.*} =  7.4 ]; then \
+       docker-php-ext-configure gd --enable-gd --with-freetype; \
+    else \
+      docker-php-ext-configure gd --with-freetype-dir; \
+    fi; \
+    docker-php-ext-install gd; \
+    \
     # install xmlrpc
     if [ ${PHP_VERSION%.*} =  8.0 ]; then \
        pecl install http://pecl.php.net/get/xmlrpc-1.0.0RC2.tgz; \
@@ -127,7 +137,8 @@ ENV PARAMS="" \
     PHP_IMPLICIT_FLUSH="Off" \
     PHP_UNSERIALIZE_CALLBACK_FUNC="" \
     PHP_SERIALIZE_PRECISION="-1" \
-    PHP_DISABLE_FUNCTIONS="passthru,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server" \
+    #PHP_DISABLE_FUNCTIONS="passthru,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server" \
+    PHP_DISABLE_FUNCTIONS="" \
     PHP_DISABLE_CLASSES="" \
     PHP_ZEND_ENABLE_GC="On" \
     PHP_EXPOSE_PHP="On" \
