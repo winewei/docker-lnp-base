@@ -3,7 +3,6 @@ language: bash
 services: docker
 
 env:
-env:
   - OFFICIAL_TAG=8.0.3-fpm-buster SECOND_TAG=v0.3 SWOOLE_VERSION=4.6.6 COMPOSER_VERSION=2.0.11
   - OFFICIAL_TAG=7.4.16-fpm-buster SECOND_TAG=v0.3 SWOOLE_VERSION=4.6.6 COMPOSER_VERSION=2.0.11
 #  # lock php version7.2.34, 7.1.33, 7.0.33
